@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ObjectId } from 'mongodb';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
@@ -64,14 +65,8 @@ export class AttendanceService {
     updateAttendancesInput: UpdateAttendancesInput,
     class_id: string,
   ) {
-    const attendances = await this.attendanceRepository.find({
-      where: {
-        class_id,
-      },
-    });
-
     // Handle mutate attendances
-    updateAttendancesInput.attendances.forEach((attendance) => {
+    const listPromise = updateAttendancesInput.attendances.map((attendance) => {
       if (!attendance.id) {
         const newAttendance = this.attendanceRepository.create({
           class_id,
@@ -81,25 +76,29 @@ export class AttendanceService {
           learn_date: attendance.learn_date,
         });
 
-        attendances.push(newAttendance);
+        return this.attendanceRepository.save(newAttendance);
       } else {
-        const indexOfAttendance = attendances.findIndex(
-          (att) => (att.id = attendance.id),
+        return this.attendanceRepository.update(
+          { id: attendance.id },
+          {
+            content: attendance.content,
+            learn_date: attendance.learn_date,
+            is_learn_date: attendance.is_learn_date,
+          },
         );
-
-        if (indexOfAttendance) {
-          attendances[indexOfAttendance].content = attendance.content;
-          attendances[indexOfAttendance].is_learn_date =
-            attendance.is_learn_date;
-        } else {
-          throw new Error('ID Attendance invalid');
-        }
       }
     });
 
-    this.attendanceRepository.save(attendances);
+    const res = await Promise.all(listPromise);
 
-    return attendances;
+    // console.log('aaa');
+    // // const attendances = await this.attendanceRepository.find({
+    //   where: {
+    //     class_id,
+    //   },
+    // });
+
+    return true;
   }
 
   // async getTagById(id): Promise<Attandance> {

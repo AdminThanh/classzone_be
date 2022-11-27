@@ -18,7 +18,7 @@ export class UserType {
 
   // @Field(() => GraphQLUpload)
   // avatar: Promise<FileUpload>;
-  @Field()
+  @Field({ nullable: true })
   avatar: string;
 
   @Field((_type) => Role, { nullable: true })
