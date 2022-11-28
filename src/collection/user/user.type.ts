@@ -15,6 +15,11 @@ export class UserType {
 
   password: string;
 
+<<<<<<< HEAD
+=======
+  // @Field(() => GraphQLUpload)
+  // avatar: Promise<FileUpload>;
+>>>>>>> 0da0018c20619b436fbbd6771746f0c32ad48f72
   @Field({ nullable: true })
   avatar: string;
 
