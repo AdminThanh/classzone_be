@@ -17,7 +17,7 @@ export class Assignment {
   id: string;
 
   @Column()
-  exam: string;
+  examClass: string;
 
   @Column()
   user: string;

@@ -21,30 +21,12 @@ export class ExamService {
   }
 
   async createExam(createExamInput: CreateExamInput): Promise<Exam> {
-    const {
-      name,
-      classRoom,
-      tags = null,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
-      questionAmount,
-      questions,
-      scoreFactor,
-    } = createExamInput;
+    const { name, tags = null, questions } = createExamInput;
     const data = {
       id: uuid(),
       name,
-      classRoom,
       tags,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
-      questionAmount,
       questions,
-      scoreFactor,
     };
     const result = this.examRepository.create(data);
     await this.examRepository.save(data);
@@ -55,28 +37,12 @@ export class ExamService {
     updateExamInput: UpdateExamInput,
     examId: string,
   ): Promise<Exam> {
-    const {
-      name,
-      classRoom,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
-      questionAmount,
-      questions,
-      scoreFactor,
-    } = updateExamInput;
+    const { name, questions, tags } = updateExamInput;
     const data = await this.examRepository.findOneBy({ id: examId });
 
     data.name = name || data.name;
-    data.classRoom = classRoom || data.classRoom;
-    data.dateFrom = dateFrom || data.dateFrom;
-    data.dateEnd = dateEnd || data.dateEnd;
-    data.isAllowReview = isAllowReview || data.isAllowReview;
-    data.minutes = minutes || data.minutes;
-    data.questionAmount = questionAmount || data.questionAmount;
     data.questions = questions || data.questions;
-    data.scoreFactor = scoreFactor || data.scoreFactor;
+    data.tags = tags || data.tags;
 
     return this.examRepository.save(data);
   }

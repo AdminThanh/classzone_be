@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Class } from '../class/class.entity';
 import { ClassModule } from '../class/class.module';
 import { QuestionModule } from '../question/question.module';
 import { TagModule } from '../tag/tag.module';
@@ -11,7 +12,6 @@ import { ExamService } from './exam.service';
   imports: [
     TypeOrmModule.forFeature([Exam]),
     QuestionModule,
-    ClassModule,
     TagModule,
   ],
   providers: [ExamService, ExamResolver],
